@@ -466,17 +466,14 @@ body {
   }
 
   .crt-monitor {
-    padding: 8px;
-    border-radius: 0;
-    box-shadow: none;
-    max-width: 100%;
+    padding: 12px;
+    border-radius: 12px;
   }
 
   .crt-screen {
     padding: 12px;
-    border-radius: 0;
-    min-height: 100dvh;
-    box-shadow: none;
+    border-radius: 6px;
+    min-height: auto;
   }
 
   .crt-screen::after {

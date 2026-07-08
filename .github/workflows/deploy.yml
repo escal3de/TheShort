@@ -42,6 +42,9 @@ jobs:
             # Возвращаем конфиг
             cp /tmp/apsProd.json /opt/theshort/publish/appsettings.Production.json 2>/dev/null || true
 
+            # Создаём папку для ключей Data Protection
+            mkdir -p /opt/theshort/publish/keys
+
             # Останавливаем фронтенд перед копированием
             systemctl stop theshort-frontend 2>/dev/null || true
 

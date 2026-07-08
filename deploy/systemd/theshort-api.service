@@ -8,12 +8,9 @@ WorkingDirectory=/opt/theshort/publish
 ExecStart=/usr/bin/dotnet TheShort.Api.dll
 Restart=always
 RestartSec=5
-User=www-data
+User=root
 Environment=ASPNETCORE_ENVIRONMENT=Production
-Environment=ASPNETCORE_URLS=http://localhost:8080
-NoNewPrivileges=true
-ProtectSystem=full
-PrivateTmp=true
+Environment=ASPNETCORE_URLS=http://127.0.0.1:8080
 
 [Install]
 WantedBy=multi-user.target

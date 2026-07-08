@@ -2,34 +2,20 @@ import { useCallback, useState, useEffect, useRef } from "react";
 
 const DOMAIN = "theshort.ru";
 
-const asciiLogo = `
-████████╗██╗  ██╗███████╗███████╗██╗  ██╗ ██████╗ ██████╗ ████████╗
-╚══██╔══╝██║  ██║██╔════╝██╔════╝██║  ██║██╔═══██╗██╔══██╗╚══██╔══╝
-   ██║   ███████║█████╗  ███████╗███████║██║   ██║██████╔╝   ██║   
-   ██║   ██╔══██║██╔══╝  ╚════██║██╔══██║██║   ██║██╔══██╗   ██║   
-   ██║   ██║  ██║███████╗███████║██║  ██║╚██████╔╝██║  ██║   ██║   
-   ╚═╝   ╚═╝  ╚═╝╚══════╝╚══════╝╚═╝  ╚═╝ ╚═════╝ ╚═╝  ╚═╝   ╚═╝   
-`;
-
 type Lang = "en" | "ru";
 
 const t: Record<Lang, Record<string, string>> = {
   en: {
-    terminal: "THESHORT-TERMINAL-v1.0",
-    online: "ONLINE",
-    offline: "OFFLINE",
-    subtitle: "[URL SHORTENING SYSTEM]",
-    tabShorten: "[SHORTEN]",
-    tabInfo: "[INFO]",
-    promptShorten: "$ theshort --shorten",
-    labelUrl: "[URL] Enter URL to shorten:",
-    placeholder: "https://example.com/very/long/url",
-    processing: "PROCESSING...",
-    btnShorten: "[SHORTEN URL]",
-    success: "[+] Short link created successfully!",
-    labelShortened: "SHORTENED:",
-    copied: "DONE",
-    copy: "COPY",
+    title: "theshort",
+    desc: "Paste a link, choose a domain, and press",
+    descEnter: "Enter",
+    descEnd: "to get a short link.",
+    placeholder: "Paste the link you want to shorten...",
+    processing: "Processing...",
+    btnShorten: "Shorten",
+    success: "Link shortened!",
+    copied: "Copied!",
+    copy: "Copy",
     errorEmpty: "Please enter a URL",
     errorInvalid: "Invalid URL. Must be a valid http/https link with a domain name.",
     errorServer: "Failed to connect to server",
@@ -38,32 +24,20 @@ const t: Record<Lang, Record<string, string>> = {
     errorNoDomain: "URL must contain a valid domain name.",
     errorNotFound: "Source link not found",
     errorTooLong: "Source URL is too long. Maximum 1024 characters.",
-    tabSwitch: "[TAB] SWITCH",
-    enterExecute: "[ENTER] EXECUTE",
     clipboard: "Copied to clipboard!",
-    promptInfo: "$ theshort --about",
-    domain: "DOMAIN:",
-    version: "VERSION:",
-    stack: "STACK:",
-    about: "Fast and simple URL shortener with a nostalgic retro terminal interface.",
-    madeWith: "Made with love by <a href=\"https://escal3de.site\">escal3de</a> <3",
+    madeWith: 'made with love by <a href="https://escal3de.site" class="footer-link" target="_blank" rel="noopener noreferrer">escal3de</a> <3',
   },
   ru: {
-    terminal: "THESHORT-ТЕРМИНАЛ-v1.0",
-    online: " ONLINE",
-    offline: "OFFLINE",
-    subtitle: "[СИСТЕМА СОКРАЩЕНИЯ ССЫЛОК]",
-    tabShorten: "[СОКРАТИТЬ]",
-    tabInfo: "[ИНФО]",
-    promptShorten: "$ theshort --shorten",
-    labelUrl: "[URL] Введите ссылку для сокращения:",
-    placeholder: "https://example.com/очень/длинная/ссылка",
-    processing: "ОБРАБОТКА...",
-    btnShorten: "[СОКРАТИТЬ ССЫЛКУ]",
-    success: "[+] Ссылка успешно создана!",
-    labelShortened: "ГОТОВО:",
-    copied: "ГОТОВО",
-    copy: "КОПИРОВАТЬ",
+    title: "theshort",
+    desc: "Вставь ссылку, выбери домен и нажми",
+    descEnter: "Enter",
+    descEnd: "чтобы получить готовую ссылку.",
+    placeholder: "Вставьте ссылку которую хотите сократить...",
+    processing: "Обработка...",
+    btnShorten: "Сократить",
+    success: "Ссылка создана!",
+    copied: "Готово!",
+    copy: "Копировать",
     errorEmpty: "Введите URL",
     errorInvalid: "Некорректный URL. Должен быть http/https ссылкой с доменом.",
     errorServer: "Не удалось подключиться к серверу",
@@ -72,15 +46,8 @@ const t: Record<Lang, Record<string, string>> = {
     errorNoDomain: "URL должен содержать валидное доменное имя.",
     errorNotFound: "Исходная ссылка не найдена",
     errorTooLong: "Ссылка слишком длинная. Максимум 1024 символа.",
-    tabSwitch: "[TAB] ПЕРЕКЛЮЧИТЬ",
-    enterExecute: "[ENTER] ВЫПОЛНИТЬ",
     clipboard: "Скопировано в буфер обмена!",
-    promptInfo: "$ theshort --about",
-    domain: "ДОМЕН:",
-    version: "ВЕРСИЯ:",
-    stack: "СТЕК:",
-    about: "Быстрый и простой сокращатель ссылок с ностальгическим ретро-терминальным интерфейсом.",
-    madeWith: "Сделано с любовью от <a href=\"https://escal3de.site\">Эскалейда</a> <3",
+    madeWith: 'сделано с любовью от <a href="https://escal3de.site" class="footer-link" target="_blank" rel="noopener noreferrer">эскалейда</a> <3',
   },
 };
 
@@ -115,21 +82,79 @@ function isValidUrl(value: string): boolean {
   }
 }
 
+function LinkIcon() {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71" />
+      <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71" />
+    </svg>
+  );
+}
+
+function ArrowIcon() {
+  return (
+    <svg viewBox="0 0 16 16" fill="currentColor">
+      <path fillRule="evenodd" d="M1.25 8A.75.75 0 0 1 2 7.25h10.19L9.47 4.53a.75.75 0 0 1 1.06-1.06l4 4a.75.75 0 0 1 0 1.06l-4 4a.75.75 0 1 1-1.06-1.06l2.72-2.72H2A.75.75 0 0 1 1.25 8" clipRule="evenodd" />
+    </svg>
+  );
+}
+
+function CheckIcon() {
+  return (
+    <svg viewBox="0 0 16 16" fill="currentColor" width="1rem" height="1rem">
+      <path fillRule="evenodd" d="M8 15A7 7 0 1 0 8 1a7 7 0 0 0 0 14m3.1-8.55a.75.75 0 1 0-1.2-.9L7.419 8.858 6.03 7.47a.75.75 0 0 0-1.06 1.06l2 2a.75.75 0 0 0 1.13-.08z" clipRule="evenodd" />
+    </svg>
+  );
+}
+
+function MoonIcon() {
+  return (
+    <svg viewBox="0 0 16 16" fill="currentColor">
+      <path fillRule="evenodd" d="M8 13.5a5.5 5.5 0 0 0 2.263-10.514 5.5 5.5 0 0 1-7.278 7.278A5.5 5.5 0 0 0 8 13.5M1.045 8.795a7.001 7.001 0 1 0 7.75-7.75l-.028-.003A7 7 0 0 0 8 1c-.527 0-.59.842-.185 1.18a4 4 0 0 1 .342.322A4 4 0 1 1 2.18 7.814C1.842 7.41 1 7.474 1 8a7 7 0 0 0 .045.794" clipRule="evenodd" />
+    </svg>
+  );
+}
+
+function SunIcon() {
+  return (
+    <svg viewBox="0 0 16 16" fill="currentColor">
+      <path fillRule="evenodd" d="M8 3a.75.75 0 0 1-.75-.75V.75a.75.75 0 0 1 1.5 0v1.5A.75.75 0 0 1 8 3m0 7.5a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5M8 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8m-.75 3.25a.75.75 0 0 0 1.5 0v-1.5a.75.75 0 0 0-1.5 0zM13 8a.75.75 0 0 1 .75-.75h1.5a.75.75 0 0 1 0 1.5h-1.5A.75.75 0 0 1 13 8M.75 7.25a.75.75 0 0 0 0 1.5h1.5a.75.75 0 0 0 0-1.5zm10.786-2.786a.75.75 0 0 1 0-1.06l1.06-1.06a.75.75 0 0 1 1.06 1.06l-1.06 1.06a.75.75 0 0 1-1.06 0m-9.193 8.132a.75.75 0 0 0 1.06 1.06l1.062-1.06a.75.75 0 0 0-1.061-1.06zm9.193-1.06a.75.75 0 0 1 1.06 0l1.06 1.06a.75.75 0 0 1-1.06 1.06l-1.06-1.06a.75.75 0 0 1 0-1.06M3.404 2.343a.75.75 0 0 0-1.06 1.06l1.06 1.061a.75.75 0 1 0 1.06-1.06z" clipRule="evenodd" />
+    </svg>
+  );
+}
+
 export default function Home() {
   const [url, setUrl] = useState("");
   const [shortLink, setShortLink] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [copied, setCopied] = useState(false);
-  const [tab, setTab] = useState<"shortener" | "info">("shortener");
-  const [online, setOnline] = useState(true);
+  const [toast, setToast] = useState(false);
+  const [toastMsg, setToastMsg] = useState("");
   const [lang, setLang] = useState<Lang>("ru");
+  const [focusProgress, setFocusProgress] = useState(false);
+  const [theme, setTheme] = useState<"dark" | "light">("dark");
   const inputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
-    const saved = localStorage.getItem("theshort-lang") as Lang | null;
-    if (saved === "en" || saved === "ru") setLang(saved);
+    const savedLang = localStorage.getItem("theshort-lang") as Lang | null;
+    if (savedLang === "en" || savedLang === "ru") setLang(savedLang);
+
+    const savedTheme = localStorage.getItem("theshort-theme") as "dark" | "light" | null;
+    if (savedTheme === "dark" || savedTheme === "light") {
+      setTheme(savedTheme);
+      document.documentElement.setAttribute("data-theme", savedTheme);
+    } else {
+      const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+      const t = prefersDark ? "dark" : "light";
+      setTheme(t);
+      document.documentElement.setAttribute("data-theme", t);
+    }
   }, []);
+
+  useEffect(() => {
+    localStorage.setItem("theshort-theme", theme);
+  }, [theme]);
 
   useEffect(() => {
     localStorage.setItem("theshort-lang", lang);
@@ -139,8 +164,22 @@ export default function Home() {
     inputRef.current?.focus();
   }, [lang]);
 
+  const showToast = useCallback((msg: string) => {
+    setToastMsg(msg);
+    setToast(true);
+    setTimeout(() => setToast(false), 2000);
+  }, []);
+
   const toggleLang = useCallback(() => {
     setLang((prev) => (prev === "en" ? "ru" : "en"));
+  }, []);
+
+  const toggleTheme = useCallback(() => {
+    setTheme((prev) => {
+      const next = prev === "dark" ? "light" : "dark";
+      document.documentElement.setAttribute("data-theme", next);
+      return next;
+    });
   }, []);
 
   const handleSubmit = useCallback(async (e: React.FormEvent) => {
@@ -163,6 +202,7 @@ export default function Home() {
     }
 
     setLoading(true);
+    setFocusProgress(true);
     try {
       const res = await fetch(apiUrl(), {
         method: "POST",
@@ -173,19 +213,17 @@ export default function Home() {
       if (!res.ok) {
         const text = await res.text();
         setError(text ? translateError(text, lang) : t[lang].errorServer);
-        setOnline(false);
         return;
       }
 
       const data = await res.json();
       setShortLink(data.shortLink);
-      setOnline(true);
       setUrl("");
     } catch {
       setError(t[lang].errorServer);
-      setOnline(false);
     } finally {
       setLoading(false);
+      setFocusProgress(false);
     }
   }, [url, lang]);
 
@@ -203,139 +241,122 @@ export default function Home() {
       document.body.removeChild(el);
     }
     setCopied(true);
+    showToast(t[lang].clipboard);
     setTimeout(() => setCopied(false), 2000);
-  }, [shortLink]);
+  }, [shortLink, lang, showToast]);
 
   return (
-    <div className="crt-monitor">
-      <div className="crt-screen crt-flicker">
-        <div className="scanlines" />
+    <div className="page">
+      <div className="orb orb--1" />
+      <div className="orb orb--2" />
+      <div className="orb orb--3" />
 
-        <div className="status-bar">
-          <div className="left">
-            <span>{t[lang].terminal}</span>
-            <button className="lang-btn" onClick={toggleLang}>
-              [{lang === "en" ? "RU" : "EN"}]
-            </button>
+      <div className="main">
+        <div className="main-inner">
+          <div className="brand-row">
+            <div className="brand-icon">
+              <LinkIcon />
+              <div className="brand-glow" />
+            </div>
+            <div className="brand-title">
+              @<span className="accent">{t[lang].title}</span>
+            </div>
           </div>
-          <div className="right">
-            <span>{online ? t[lang].online : t[lang].offline}</span>
-            <span className={`status-light ${online ? "online" : "offline"}`} />
+
+          <div className="description">
+            {t[lang].desc}{" "}
+            <span className="highlight">{t[lang].descEnter}</span>
+            {" "}{t[lang].descEnd}
           </div>
-        </div>
 
-        <div className="ascii-logo">
-          <pre>{asciiLogo}</pre>
-          <div className="subtitle">{t[lang].subtitle}</div>
-        </div>
-
-        <div className="tabs">
-          <button
-            className={`tab ${tab === "shortener" ? "active" : ""}`}
-            onClick={() => setTab("shortener")}
-          >
-            {t[lang].tabShorten}
-          </button>
-          <button
-            className={`tab ${tab === "info" ? "active" : ""}`}
-            onClick={() => setTab("info")}
-          >
-            {t[lang].tabInfo}
-          </button>
-        </div>
-
-        <div className="content">
-          {tab === "shortener" && (
-            <>
-              <div className="terminal-prompt">
-                {t[lang].promptShorten}
+          <form onSubmit={handleSubmit} className="action-row">
+            <div className="input-wrapper">
+              <input
+                ref={inputRef}
+                type="text"
+                className="input"
+                placeholder={t[lang].placeholder}
+                value={url}
+                onChange={(e) => setUrl(e.target.value)}
+                disabled={loading}
+                onFocus={() => setFocusProgress(true)}
+                onBlur={() => setFocusProgress(false)}
+              />
+              <div className={`input-progress ${focusProgress ? "active" : ""}`}>
+                <div className="bar" style={{ width: loading ? "60%" : url.length > 0 ? "100%" : "0%" }} />
               </div>
+            </div>
 
-              <form onSubmit={handleSubmit}>
-                <div className="form-group">
-                  <label className="form-label">
-                    {t[lang].labelUrl}
-                  </label>
-                  <input
-                    ref={inputRef}
-                    type="text"
-                    className={`retro-input ${error ? "error" : ""}`}
-                    placeholder={t[lang].placeholder}
-                    value={url}
-                    onChange={(e) => setUrl(e.target.value)}
-                    disabled={loading}
-                  />
-                </div>
+            <div className="controls-row">
+              <button type="button" className="domain-btn" disabled>
+                {DOMAIN}
+                <svg className="chevron" viewBox="0 0 16 16" fill="currentColor">
+                  <path fillRule="evenodd" d="M3.58 4.109a.75.75 0 0 0 1.061 1.06L8 1.811l3.354 3.353a.75.75 0 0 0 1.06-1.06L8.53.22a.75.75 0 0 0-1.06 0zm8.84 7.782a.75.75 0 1 0-1.061-1.06l-3.36 3.358-3.353-3.353a.75.75 0 1 0-1.06 1.06L7.47 15.78a.75.75 0 0 0 1.06 0z" clipRule="evenodd" />
+                </svg>
+              </button>
 
-                <button
-                  type="submit"
-                  className="retro-button"
-                  disabled={loading}
-                  style={{ marginTop: 8 }}
-                >
-                  {loading
-                    ? <><span className="spinner" /> {t[lang].processing}</>
-                    : t[lang].btnShorten}
+              <div className="submit-wrap">
+                <button type="submit" className="submit-btn" disabled={loading}>
+                  {loading ? <span className="spinner" /> : <ArrowIcon />}
                 </button>
-              </form>
-
-              {shortLink && (
-                <div className="result-box">
-                  <div className="success-check">
-                    {t[lang].success}
-                  </div>
-                  <div className="label">{t[lang].labelShortened}</div>
-                  <div className="short-url-row">
-                    <a
-                      className="url"
-                      href={`https://${DOMAIN}/${shortLink}`}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                    >
-                      https://{DOMAIN}/{shortLink}
-                    </a>
-                    <button className="copy-btn" onClick={handleCopy}>
-                      {copied ? t[lang].copied : t[lang].copy}
-                    </button>
-                  </div>
-                </div>
-              )}
-
-              {error && <div className="error-box">ERROR: {error}</div>}
-            </>
-          )}
-
-          {tab === "info" && (
-            <div>
-              <div className="terminal-prompt">
-                {t[lang].promptInfo}
+                <div className="submit-glow" />
               </div>
-              <div className="result-box" style={{ fontSize: "0.75rem", lineHeight: 1.8 }}>
-                <div><span style={{ color: "var(--theme-text-dim)" }}>{t[lang].domain}</span> {DOMAIN}</div>
-                <div><span style={{ color: "var(--theme-text-dim)" }}>{t[lang].version}</span> 1.0.0</div>
-                <div><span style={{ color: "var(--theme-text-dim)" }}>{t[lang].stack}</span> ASP.NET Core + Next.js</div>
-                <div style={{ marginTop: 8, color: "var(--theme-text-dim)" }}>
-                  {t[lang].about}
-                </div>
+            </div>
+          </form>
+
+          {shortLink && (
+            <div className="result-area">
+              <div className="result-card">
+                <a
+                  className="url"
+                  href={`https://${DOMAIN}/${shortLink}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  https://{DOMAIN}/{shortLink}
+                </a>
+                <button
+                  className={`copy-btn ${copied ? "copied" : ""}`}
+                  onClick={handleCopy}
+                >
+                  {copied ? <CheckIcon /> : null}
+                  {copied ? t[lang].copied : t[lang].copy}
+                </button>
               </div>
             </div>
           )}
-        </div>
 
-        <div className="footer-bar">
-          <div className="keys">
-            <span>{t[lang].tabSwitch}</span>
-            <span>{t[lang].enterExecute}</span>
-          </div>
-          <div
-            className="made-with"
-            dangerouslySetInnerHTML={{ __html: t[lang].madeWith }}
-          />
+          {error && (
+            <div className="error-area">
+              <div className="error-box">{error}</div>
+            </div>
+          )}
         </div>
       </div>
 
-      {copied && (
-        <div className="copied-toast">{t[lang].clipboard}</div>
+      <div className="footer">
+        <div className="footer-inner">
+          <div className="footer-row">
+            <span
+              className="footer-text"
+              dangerouslySetInnerHTML={{ __html: t[lang].madeWith }}
+            />
+            <span className="footer-sep">✦</span>
+            <button className="footer-btn" onClick={toggleLang}>
+              <span style={{ fontSize: "0.75rem", fontWeight: 600, fontFamily: "var(--font)" }}>
+                {lang === "en" ? "RU" : "EN"}
+              </span>
+            </button>
+            <span className="footer-sep">✦</span>
+            <button className="footer-btn" onClick={toggleTheme}>
+              {theme === "dark" ? <MoonIcon /> : <SunIcon />}
+            </button>
+          </div>
+        </div>
+      </div>
+
+      {toast && (
+        <div className="toast">{toastMsg}</div>
       )}
     </div>
   );

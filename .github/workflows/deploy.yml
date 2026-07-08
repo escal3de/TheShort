@@ -15,55 +15,48 @@ jobs:
           username: ${{ secrets.DEPLOY_USER }}
           key: ${{ secrets.DEPLOY_SSH_KEY }}
           script: |
-            set -e
-
-            # Создаём нужные папки
-            mkdir -p /opt/theshort/repo /opt/theshort/publish /opt/theshort/frontend
-
+            echo "=== Pulling code ==="
             cd /opt/theshort/repo
             git reset --hard origin/main
             git pull origin main
 
-            # Устанавливаем юниты systemd
+            echo "=== Copying systemd units ==="
             cp deploy/systemd/theshort-api.service /etc/systemd/system/
             cp deploy/systemd/theshort-frontend.service /etc/systemd/system/
             systemctl daemon-reload
 
-            # Бэкапим конфиг
+            echo "=== Building backend ==="
             cp /opt/theshort/publish/appsettings.Production.json /tmp/apsProd.json 2>/dev/null || true
-
-            # Останавливаем бэкенд перед публишем (файлы заблокированы)
             systemctl stop theshort-api 2>/dev/null || true
-
-            # Собираем .NET бэкенд
             /usr/bin/dotnet publish TheShort.Api/TheShort.Api.csproj \
               -c Release -o /opt/theshort/publish
-
-            # Возвращаем конфиг
-            cp /tmp/apsProd.json /opt/theshort/publish/appsettings.Production.json 2>/dev/null || true
-
-            # Создаём папку для ключей Data Protection
             mkdir -p /opt/theshort/publish/keys
+            cp /tmp/apsProd.json /opt/theshort/publish/appsettings.Production.json 2>/dev/null || true
+            echo "Backend built OK"
 
-            # Останавливаем фронтенд перед копированием
+            echo "=== Building frontend ==="
             systemctl stop theshort-frontend 2>/dev/null || true
-
-            # Собираем фронтенд
             cd /opt/theshort/repo/TheShort.Frontend
+            rm -rf .next node_modules/.cache 2>/dev/null || true
             npm ci
-            npm run build
-
-            # Копируем сборку
+            npx next build
             rm -rf /opt/theshort/frontend/*
+            mkdir -p /opt/theshort/frontend
             cp -r .next /opt/theshort/frontend/.next
             cp -r public /opt/theshort/frontend/public 2>/dev/null || true
             cp -r node_modules /opt/theshort/frontend/node_modules
             cp package.json /opt/theshort/frontend/
+            echo "Frontend built OK"
 
-            # Перезапускаем всё
+            echo "=== Starting services ==="
             systemctl enable theshort-api theshort-frontend 2>/dev/null || true
             systemctl restart nginx
             systemctl start theshort-api
             systemctl start theshort-frontend
+
+            echo "=== Checking ==="
+            sleep 2
+            systemctl is-active theshort-api theshort-frontend nginx
+            ls -la /opt/theshort/frontend/.next/static/chunks/pages/index-*.js
 
             echo "=== Deployed Successfully ==="

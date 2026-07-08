@@ -459,35 +459,57 @@ body {
   to { opacity: 1; transform: translateX(-50%) translateY(0); }
 }
 
-@media (max-width: 600px) {
+@media (max-width: 768px) {
   body {
-    padding: 8px;
+    padding: 0;
     align-items: stretch;
   }
 
   .crt-monitor {
-    padding: 12px;
-    border-radius: 12px;
+    padding: 8px;
+    border-radius: 0;
+    box-shadow: none;
+    max-width: 100%;
   }
 
   .crt-screen {
     padding: 12px;
+    border-radius: 0;
     min-height: 100dvh;
-    border-radius: 6px;
+    box-shadow: none;
+  }
+
+  .crt-screen::after {
+    display: none;
+  }
+
+  .crt-flicker {
+    animation: none;
+  }
+
+  .scanlines {
+    opacity: 0.3;
+  }
+
+  .ascii-logo {
+    margin-bottom: 12px;
   }
 
   .ascii-logo pre {
-    font-size: 0.25rem;
+    font-size: 0.3rem;
+    line-height: 1;
   }
 
   .ascii-logo .subtitle {
-    font-size: 0.65rem;
+    font-size: 0.7rem;
+    margin-top: 4px;
   }
 
   .status-bar {
     font-size: 0.6rem;
     flex-wrap: wrap;
     gap: 4px;
+    margin-bottom: 12px;
   }
 
   .status-bar .left {
@@ -495,43 +517,51 @@ body {
     gap: 6px;
   }
 
+  .lang-btn {
+    padding: 4px 10px;
+    font-size: 0.6rem;
+  }
+
   .tabs {
-    gap: 2px;
+    margin-bottom: 12px;
   }
 
   .tab {
-    font-size: 0.6rem;
-    padding: 6px 10px;
+    font-size: 0.65rem;
+    padding: 10px 8px;
     flex: 1;
     text-align: center;
   }
 
   .terminal-prompt {
-    font-size: 0.65rem;
+    font-size: 0.7rem;
+    margin-bottom: 12px;
   }
 
   .form-label {
-    font-size: 0.65rem;
+    font-size: 0.7rem;
   }
 
   .retro-input {
-    font-size: 0.7rem;
-    padding: 8px 10px;
+    font-size: 0.8rem;
+    padding: 12px;
   }
 
   .retro-button {
-    font-size: 0.7rem;
-    padding: 10px;
+    font-size: 0.75rem;
+    padding: 14px;
+    border-width: 2px;
   }
 
   .result-box {
     padding: 10px;
+    margin-top: 12px;
   }
 
   .result-box .short-url-row {
     flex-direction: column;
     align-items: stretch;
-    gap: 6px;
+    gap: 8px;
   }
 
   .result-box .short-url-row .url {
@@ -542,30 +572,58 @@ body {
   .result-box .short-url-row .copy-btn {
     width: 100%;
     text-align: center;
+    padding: 10px;
+    font-size: 0.75rem;
+  }
+
+  .error-box {
+    font-size: 0.7rem;
+    padding: 8px 12px;
   }
 
   .footer-bar {
     font-size: 0.55rem;
+    margin-top: 12px;
   }
 
   .footer-bar .keys {
     flex-direction: column;
-    gap: 4px;
+    gap: 2px;
+  }
+
+  .made-with {
+    font-size: 0.55rem;
+    margin-top: 8px;
+  }
+
+  .copied-toast {
+    font-size: 0.7rem;
+    padding: 8px 16px;
+    bottom: 12px;
   }
 }
 
 @media (max-width: 400px) {
   .ascii-logo pre {
-    font-size: 0.2rem;
+    font-size: 0.22rem;
   }
 
-  .status-bar .left,
-  .status-bar .right {
-    font-size: 0.5rem;
+  .ascii-logo .subtitle {
+    font-size: 0.6rem;
   }
 
   .tab {
-    font-size: 0.5rem;
-    padding: 4px 6px;
+    font-size: 0.55rem;
+    padding: 8px 4px;
+  }
+
+  .retro-input {
+    font-size: 0.75rem;
+    padding: 10px;
+  }
+
+  .retro-button {
+    font-size: 0.7rem;
+    padding: 12px;
   }
 }

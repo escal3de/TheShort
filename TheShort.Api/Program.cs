@@ -65,20 +65,11 @@ using (var scope = app.Services.CreateScope())
 
 app.UseExceptionHandler();
 
-if (app.Environment.IsDevelopment())
-{
-    app.MapOpenApi();
-}
+if (app.Environment.IsDevelopment()) app.MapOpenApi();
 
-if (app.Environment.IsProduction())
-{
-    app.UseHsts();
-}
+if (app.Environment.IsProduction()) app.UseHsts();
 
-if (!app.Environment.IsProduction())
-{
-    app.UseHttpsRedirection();
-}
+if (!app.Environment.IsProduction()) app.UseHttpsRedirection();
 
 app.Use(async (context, next) =>
 {

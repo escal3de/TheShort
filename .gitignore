@@ -5,19 +5,25 @@ obj/
 *.suo
 *.sln.docstates
 *.userprefs
-.DS_Store
+.csproj.user
 .vs/
-*.csproj.user
+*.DotSettings
 
 # Node.js
 node_modules/
 .next/
+*.tsbuildinfo
+
+# Next.js
+.next/trace
+TheShort.Frontend/.env.local
 
 # Logs
 logs/
 
 # IDE
 .idea/
+.vscode/
 *.swp
 *.swo
 *~
@@ -25,6 +31,21 @@ logs/
 # OS
 Thumbs.db
 Desktop.ini
+.DS_Store
 
 # Secret
 appsettings.Secret.json
+
+# Docker
+docker-compose.override.yml
+
+# Data Protection keys
+TheShort.Api/keys/
+
+# Build output
+**/publish/
+**/out/
+
+# Temp
+*.tmp
+*.temp

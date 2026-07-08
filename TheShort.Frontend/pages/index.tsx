@@ -47,6 +47,7 @@ const t: Record<Lang, Record<string, string>> = {
     version: "VERSION:",
     stack: "STACK:",
     about: "Fast and simple URL shortener with a nostalgic retro terminal interface.",
+    madeWith: "Made with love by <a href=\"https://escal3de.site\">escal3de</a> <3",
   },
   ru: {
     terminal: "THESHORT-ТЕРМИНАЛ-v1.0",
@@ -80,6 +81,7 @@ const t: Record<Lang, Record<string, string>> = {
     version: "ВЕРСИЯ:",
     stack: "СТЕК:",
     about: "Быстрый и простой сокращатель ссылок с ностальгическим ретро-терминальным интерфейсом.",
+    madeWith: "Сделано с любовью от <a href=\"https://escal3de.site\">Эскалейда</a> <3",
   },
 };
 
@@ -314,6 +316,10 @@ export default function Home() {
             <span>{t[lang].tabSwitch}</span>
             <span>{t[lang].enterExecute}</span>
           </div>
+          <div
+            className="made-with"
+            dangerouslySetInnerHTML={{ __html: t[lang].madeWith }}
+          />
         </div>
       </div>
 

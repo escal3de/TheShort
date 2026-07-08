@@ -393,6 +393,21 @@ body {
   gap: 16px;
 }
 
+.made-with {
+  margin-top: 12px;
+  font-size: 0.6rem;
+}
+
+.made-with a {
+  color: var(--theme-text);
+  text-decoration: none;
+  text-shadow: 0 0 8px currentColor;
+}
+
+.made-with a:hover {
+  text-decoration: underline;
+}
+
 .success-check {
   display: inline-flex;
   align-items: center;

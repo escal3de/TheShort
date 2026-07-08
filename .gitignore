@@ -1,0 +1,30 @@
+# .NET
+bin/
+obj/
+*.user
+*.suo
+*.sln.docstates
+*.userprefs
+.DS_Store
+.vs/
+*.csproj.user
+
+# Node.js
+node_modules/
+.next/
+
+# Logs
+logs/
+
+# IDE
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+Thumbs.db
+Desktop.ini
+
+# Secret
+appsettings.Secret.json

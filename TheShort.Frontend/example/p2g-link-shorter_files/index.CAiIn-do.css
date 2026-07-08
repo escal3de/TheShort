@@ -1,0 +1,1 @@
+.bg-fade-y{mask-image:-webkit-gradient(linear,left center,right center,color-stop(0,transparent),color-stop(.1,rgba(0,0,0,.5)),color-stop(.5,#000),color-stop(.9,rgba(0,0,0,.5)),color-stop(1,transparent));-webkit-mask-image:-webkit-gradient(linear,left center,right center,color-stop(0,transparent),color-stop(.1,#000),color-stop(1,#000))}

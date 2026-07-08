@@ -1,0 +1,49 @@
+services:
+  postgres:
+    image: postgres:17-alpine
+    container_name: theshort-db
+    environment:
+      POSTGRES_DB: theshort
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5433:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  api:
+    image: theshort-api
+    container_name: theshort-api
+    build:
+      context: .
+      dockerfile: TheShort.Api/Dockerfile
+    ports:
+      - "5192:8080"
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
+      ASPNETCORE_URLS: http://+:8080
+      ConnectionStrings__DefaultConnection: "Host=postgres;Port=5432;Database=theshort;Username=postgres;Password=postgres"
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  frontend:
+    image: theshort-frontend
+    container_name: theshort-frontend
+    build:
+      context: ./TheShort.Frontend
+      dockerfile: Dockerfile
+    ports:
+      - "4357:4356"
+    environment:
+      NEXT_PUBLIC_API_URL: http://localhost:5192
+    depends_on:
+      - api
+
+volumes:
+  postgres_data:

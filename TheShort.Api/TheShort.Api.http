@@ -1,0 +1,10 @@
+@TheShort.Api_HostAddress = http://localhost:5192
+
+POST {{TheShort.Api_HostAddress}}/api/short-links
+Content-Type: application/json
+
+{
+  "sourceUrl": "https://example.com/very-long-url-to-shorten"
+}
+
+###

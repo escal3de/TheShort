@@ -17,12 +17,23 @@ jobs:
           script: |
             set -e
 
+            # Создаём нужные папки
+            mkdir -p /opt/theshort/repo /opt/theshort/publish /opt/theshort/frontend
+
             cd /opt/theshort/repo
             git reset --hard origin/main
             git pull origin main
 
-            # Бэкапим конфиг бэкенда
+            # Устанавливаем юниты systemd
+            cp deploy/systemd/theshort-api.service /etc/systemd/system/
+            cp deploy/systemd/theshort-frontend.service /etc/systemd/system/
+            systemctl daemon-reload
+
+            # Бэкапим конфиг
             cp /opt/theshort/publish/appsettings.Production.json /tmp/apsProd.json 2>/dev/null || true
+
+            # Останавливаем бэкенд перед публишем (файлы заблокированы)
+            systemctl stop theshort-api 2>/dev/null || true
 
             # Собираем .NET бэкенд
             /usr/bin/dotnet publish TheShort.Api/TheShort.Api.csproj \
@@ -31,21 +42,25 @@ jobs:
             # Возвращаем конфиг
             cp /tmp/apsProd.json /opt/theshort/publish/appsettings.Production.json 2>/dev/null || true
 
+            # Останавливаем фронтенд перед копированием
+            systemctl stop theshort-frontend 2>/dev/null || true
+
             # Собираем фронтенд
             cd /opt/theshort/repo/TheShort.Frontend
             npm ci
             npm run build
 
-            # Копируем сборку фронтенда
+            # Копируем сборку
             rm -rf /opt/theshort/frontend/*
             cp -r .next /opt/theshort/frontend/.next
             cp -r public /opt/theshort/frontend/public 2>/dev/null || true
-            cp package.json /opt/theshort/frontend/
             cp -r node_modules /opt/theshort/frontend/node_modules
+            cp package.json /opt/theshort/frontend/
 
-            # Перезапускаем службы
-            sudo nginx -t && sudo systemctl restart nginx
-            sudo systemctl restart theshort-api.service
-            sudo systemctl restart theshort-frontend.service
+            # Перезапускаем всё
+            systemctl enable theshort-api theshort-frontend 2>/dev/null || true
+            systemctl restart nginx
+            systemctl start theshort-api
+            systemctl start theshort-frontend
 
             echo "=== Deployed Successfully ==="

@@ -1,0 +1,16 @@
+[Unit]
+Description=TheShort Frontend
+After=network.target
+
+[Service]
+WorkingDirectory=/opt/theshort/frontend
+ExecStart=/usr/bin/node /opt/theshort/frontend/node_modules/.bin/next start --port 4356
+Restart=always
+RestartSec=10
+Environment=NODE_ENV=production
+Environment=PORT=4356
+Environment=API_URL=http://127.0.0.1:8080
+User=root
+
+[Install]
+WantedBy=multi-user.target

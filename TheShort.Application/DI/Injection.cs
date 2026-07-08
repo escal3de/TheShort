@@ -11,6 +11,7 @@ public static class Injection
     public static IServiceCollection AddApplication(this IServiceCollection services)
     {
         services.AddScoped<CreateShortLinkHandler>();
+        services.AddScoped<ResolveShortLinkHandler>();
 
         services.AddScoped<IValidator<CreateShortLinkRequest>, CreateShortLinkRequestValidator>();
         

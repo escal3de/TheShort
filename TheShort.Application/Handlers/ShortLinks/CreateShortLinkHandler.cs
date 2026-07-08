@@ -29,9 +29,12 @@ public class CreateShortLinkHandler(
             await _cache.GetAsync<ShortLinkResponse>($"cache:short_link:{request.SourceUrl}", cancellationToken);
         if (cached is not null)
             return Result.Success(cached);
+        
+        var existsByShortLink = await _repository.GetByShortCodeAsync(request.SourceUrl, cancellationToken);
 
         var exists = await _repository.GetAsync(request.SourceUrl, cancellationToken);
-        if (exists.IsSuccess)
+        
+        if (exists.IsSuccess || existsByShortLink.IsSuccess)
             return Result.Success(exists.Value.ToResponse());
 
         var shortLink = ShortLink.Create(request.SourceUrl);

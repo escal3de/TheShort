@@ -27,6 +27,16 @@ public class CreateShortLinkRequestValidator : AbstractValidator<CreateShortLink
                     return false;
 
                 return true;
-            });
+            })
+            .WithMessage("Invalid URL format.")
+            .Must(value =>
+            {
+                if (string.IsNullOrWhiteSpace(value))
+                    return true;
+                if (!Uri.TryCreate(value, UriKind.Absolute, out Uri? parsedUri))
+                    return true;
+                return !parsedUri.Host.EndsWith("theshort.ru", StringComparison.OrdinalIgnoreCase);
+            })
+            .WithMessage("Cannot shorten links from theshort.ru domain.");
     }
 }

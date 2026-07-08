@@ -91,6 +91,7 @@ const errorMap: Record<string, keyof (typeof t)["en"]> = {
   "URL must contain a valid domain name.": "errorNoDomain",
   "Source link not found": "errorNotFound",
   "Source url is too long.": "errorTooLong",
+  "Cannot shorten links from theshort.ru domain.": "errorInvalid",
 };
 
 function translateError(msg: string, lang: Lang): string {
@@ -154,6 +155,10 @@ export default function Home() {
     }
     if (!isValidUrl(trimmed)) {
       setError(t[lang].errorInvalid);
+      return;
+    }
+    if (/theshort\.ru/i.test(trimmed)) {
+      setError("ERROR: Cannot shorten links from this domain.");
       return;
     }
 

@@ -1,6 +1,6 @@
 import { useCallback, useState, useEffect, useRef } from "react";
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || "/api/short-links";
+const API_URL = "/api/short-links";
 const DOMAIN = "theshort.ru";
 
 const asciiLogo = `

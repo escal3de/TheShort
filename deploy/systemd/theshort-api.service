@@ -1,0 +1,19 @@
+[Unit]
+Description=TheShort API
+After=network.target postgresql.service
+
+[Service]
+Type=simple
+WorkingDirectory=/opt/theshort/publish
+ExecStart=/usr/bin/dotnet TheShort.Api.dll
+Restart=always
+RestartSec=5
+User=www-data
+Environment=ASPNETCORE_ENVIRONMENT=Production
+Environment=ASPNETCORE_URLS=http://localhost:8080
+NoNewPrivileges=true
+ProtectSystem=full
+PrivateTmp=true
+
+[Install]
+WantedBy=multi-user.target

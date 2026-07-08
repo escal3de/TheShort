@@ -20,7 +20,6 @@ builder.Services.AddCustomRateLimiter();
 
 builder.Services.AddDataProtection()
     .PersistKeysToFileSystem(new DirectoryInfo(Path.Combine(AppContext.BaseDirectory, "keys")))
-    .ProtectKeysWithDpapi()
     .SetApplicationName("TheShort");
 
 builder.Services.AddApplication();

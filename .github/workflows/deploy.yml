@@ -40,7 +40,7 @@ jobs:
             rm -rf .next node_modules/.cache 2>/dev/null || true
             npm ci
             npx next build
-            rm -rf /opt/theshort/frontend/*
+            rm -rf /opt/theshort/frontend
             mkdir -p /opt/theshort/frontend
             cp -r .next /opt/theshort/frontend/.next
             cp -r public /opt/theshort/frontend/public 2>/dev/null || true

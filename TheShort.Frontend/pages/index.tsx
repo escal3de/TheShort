@@ -1,6 +1,5 @@
 import { useCallback, useState, useEffect, useRef } from "react";
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || "/api/short-links";
 const DOMAIN = "theshort.ru";
 
 const asciiLogo = `
@@ -99,6 +98,13 @@ function translateError(msg: string, lang: Lang): string {
   return key ? t[lang][key] : msg;
 }
 
+function apiUrl(): string {
+  if (typeof window !== "undefined" && window.location.hostname === "localhost") {
+    return "http://localhost:5192/api/short-links";
+  }
+  return "/api/short-links";
+}
+
 function isValidUrl(value: string): boolean {
   try {
     const parsed = new URL(value);
@@ -153,7 +159,7 @@ export default function Home() {
 
     setLoading(true);
     try {
-      const res = await fetch(API_URL, {
+      const res = await fetch(apiUrl(), {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ sourceUrl: trimmed }),

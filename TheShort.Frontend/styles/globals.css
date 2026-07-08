@@ -461,8 +461,7 @@ body {
 
 @media (max-width: 768px) {
   body {
-    padding: 0;
-    align-items: stretch;
+    padding: 12px;
   }
 
   .crt-monitor {

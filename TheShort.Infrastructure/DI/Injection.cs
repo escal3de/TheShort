@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using TheShort.Application.Abstractions.Caching;
+using TheShort.Infrastructure.Realisations.BackgroundServices;
 using TheShort.Infrastructure.Realisations.Caching;
 using TheShort.Infrastructure.Realisations.Caching.Options;
 
@@ -15,6 +16,8 @@ public static class Injection
             options.DefaultExpirationSeconds = 300;
         });
         services.AddScoped<ICacheService, CacheService>();
+
+        services.AddHostedService<AutomaticDeleteLinksService>();
 
         return services;
     }

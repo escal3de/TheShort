@@ -9,5 +9,7 @@ public interface IShortLinksRepository
     Task<Result> AddAsync(ShortLink shortLink, CancellationToken cancellationToken);
     Task<Result<ShortLink>> GetAsync(string sourceUrl, CancellationToken cancellationToken);
     Task<Result<ShortLink>> GetByShortCodeAsync(string shortCode, CancellationToken cancellationToken);
+    Task<Result<IEnumerable<ShortLink>>> GetAllAsync(CancellationToken cancellationToken);
+    Task<Result> DeleteOlderThanAsync(DateTime olderThan, CancellationToken cancellationToken);
     Task<Result> DeleteAsync(Guid id, CancellationToken cancellationToken);
 }

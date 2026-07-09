@@ -49,3 +49,4 @@ TheShort.Api/keys/
 # Temp
 *.tmp
 *.temp
+/deploy/

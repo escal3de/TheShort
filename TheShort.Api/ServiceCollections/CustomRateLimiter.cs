@@ -19,9 +19,9 @@ public static class CustomRateLimiter
                         factory: _ => new FixedWindowRateLimiterOptions
                         {
                             AutoReplenishment = true,
-                            PermitLimit = 1000,
+                            PermitLimit = 100,
                             QueueLimit = 0,
-                            Window = TimeSpan.FromMinutes(1)
+                            Window = TimeSpan.FromMinutes(10)
                         }));
 
             options.OnRejected = async (context, token) =>

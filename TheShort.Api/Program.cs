@@ -34,7 +34,7 @@ builder.Services.AddCors(options =>
     });
 });
 
-builder.Services.AddPersistence(configuration);
+builder.Services.AddPersistence(configuration, builder.Environment);
 
 builder.WebHost.ConfigureKestrel(options =>
 {
